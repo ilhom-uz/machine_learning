@@ -10,6 +10,9 @@ from sklearn.naive_bayes import GaussianNB
 # import performance metrics library
 from sklearn import metrics
 
+# Logistic Regression
+from sklearn.linear_model import LogisticRegression
+
 
 def plot_correlation(df, size=11):
     """
@@ -29,14 +32,8 @@ def plot_correlation(df, size=11):
 # Load review data
 df = pd.read_csv("pima-data.csv")
 
-# print(df.isnull().values.any())
-
-# print(df.corr())
 
 del df['skin']
-
-#Plot the data
-# plot_correlation(df)
 
 diabetes_map = {True: 1, False: 0}
 
@@ -58,11 +55,9 @@ split_test_size = 0.30
 
 # test_size = 0.3 is 30%, 42 is the answer to everything(randomization static number)
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=split_test_size, random_state=42)
-print('==================================================')
-# print(x_train)
-print('==================================================')
-# Verify predicted values was split correct
 
+
+# Verify predicted values was split correct
 ### Post-split Data preparation
 print('Glucose_conc zeros: ', len(df.loc[df['glucose_conc']==0]))
 print('Diastolic zeros: ', len(df.loc[df['diastolic_bp']==0]))
@@ -71,8 +66,6 @@ print('insulin zeros: ', len(df.loc[df['insulin']==0]))
 print('bmi zeros: ', len(df.loc[df['bmi']==0]))
 print('diab_pred zeros: ', len(df.loc[df['diab_pred']==0]))
 print('age zeros: ', len(df.loc[df['age']==0]))
-
-print('==================================================')
 
 
 # Fill all "0"s with mean of the column
@@ -132,11 +125,7 @@ print('Classification report')
 print(metrics.classification_report(y_test, rf_predict_test, labels=[1, 0]))
 
 
-#
 # Logistic Regression
-#
-from sklearn.linear_model import LogisticRegression
-
 lr_model = LogisticRegression(C=0.7, random_state=42)
 lr_model.fit(x_train, y_train.ravel())
 
@@ -181,10 +170,8 @@ print('1st max value of {0:.3f} occured at C={1:.3f}'.format(best_recall_score, 
 
 print('============')
 
-print(C_values)
-print(recall_scores)
-
-
+print('C_value: ', C_values)
+print('Recal Score: ', recall_scores)
 
 print('============')
 

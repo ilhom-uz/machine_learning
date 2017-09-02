@@ -22,19 +22,6 @@ def get_data_google(symbol, years, exchange):
     return data
 
 
-def get_data_quandl(symbol, start_date, end_date):
-    """
-    :param symbol: ETF Symbol for retreival from quandl
-    :param start_date: Start date of data
-    :param end_date: End date of data
-    :return: Stock performance for requested period
-    """
-    auth_key = '7VBcsWq-7Fyr3ByV-hQq'
-    data = quandl.get(symbol, start_date=start_date, end_date=end_date)
-    # data = quandl.get(dataset=)
-    # data = quandl.get()
-    return data
-
 def generate_features(df):
     """
     Generate features for a stock/index based on historical prices
@@ -115,11 +102,13 @@ def generate_features(df):
     return df_new
 
 # data = get_data_quandl('TVC/DJI', '2001-01-01', '2015-12-31')
-
 # data = get_data_google('F', '17Y','NYSE')
-data = get_data_google('AMD', '17Y','NASDAQ')
+
+# Getting Data from google finance
+data = get_data_google('AMD', '17Y', 'NASDAQ')
 today = datetime.datetime(2017, 9, 1, 16, 0)
 
+# Adding today's open manually carrently need to automate
 data.loc[today] = [13.15, None, None, 13, None]
 
 print(data)
@@ -131,10 +120,6 @@ start_train = datetime.datetime(2001, 1, 1, 16, 00)
 end_train= datetime.datetime(2017, 5, 1, 16, 00)
 data_train = data.ix[start_train:end_train]
 
-# print('===================')
-# print(data_train.round(decimals=3).head(3))
-# print(data_train.round(decimals=3).tail(3))
-# print('===================')
 
 X_columns = list(data.drop(['close'], axis=1).columns)
 y_column = 'close'
@@ -150,36 +135,14 @@ end_test = datetime.datetime(2017, 12, 31, 16, 0)
 data_test = data.ix[start_test:end_test]
 today = datetime.datetime(2017, 8, 30, 16, 0)
 
-print('==Data TESTTTT')
-
-# print(data_test.columns)
-
-print(data_test)
 
 X_test = data_test[X_columns]
 y_test = data_test[y_column]
 
-print('===== SGD Results====')
-# print(data_test)
-
-print(len(y_test.values))
-print(len(y_test.index))
-# print(y_test)
-# print(sgd_predictions)
-
-x_plot = list(y_test.index)
-y_plot = list(y_test.values)
-
-print('===== SGD Resuts ====')
-print(X_test.shape)
-print(y_test.shape)
-
 
 # Start regression ML with standard Scaler
 scaler = StandardScaler()
-
 scaler.fit(X_train)
-
 X_scaled_train = scaler.transform(X_train)
 X_scaled_test = scaler.transform(X_test)
 
@@ -194,15 +157,12 @@ lr = SGDRegressor(penalty='l2', max_iter=1000)
 grid_search = GridSearchCV(lr, param_grid, cv=5, scoring='neg_mean_absolute_error')
 grid_search.fit(X_scaled_train, y_train)
 
-print('+++++++++++')
-print(grid_search.best_params_)
-print('+++++++++++')
-
+# Predict iwht best estimator
 lr_best = grid_search.best_estimator_
 sgd_predictions = lr_best.predict(X_scaled_test)
 
 
-
+# Print Error rates
 print('===== SGD ====')
 print(len(sgd_predictions))
 print('MSE: {0:.3f}'.format(mean_squared_error(y_test, sgd_predictions)))
@@ -213,6 +173,7 @@ print('====PREDICTIONS=======')
 print('SGD')
 print(sgd_predictions)
 
+# Still working on Random Forest and Support Vector Regression models
 # print('====PREDICTIONS=======')
 #
 # # Random Forest
@@ -274,6 +235,7 @@ print(sgd_predictions)
 #
 # print('====PREDICTIONS=======')
 
+# Plot the results
 plt.plot(x=y_test.index, y=y_test.values, c='k')
 plt.scatter(x=y_test.index, y=y_test.values, marker='o', c='k')
 plt.scatter(x=y_test.index, y=sgd_predictions, marker='*', c='b')

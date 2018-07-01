@@ -176,31 +176,31 @@ print(sgd_predictions)
 # Still working on Random Forest and Support Vector Regression models
 # print('====PREDICTIONS=======')
 #
-# # Random Forest
-# param_grid = {
-#    "max_depth": [30, 50],
-#    "min_samples_split": [3, 5, 10],
-#    }
-# rf = RandomForestRegressor(n_estimators=1000)
-# grid_search = GridSearchCV(rf, param_grid, cv=5,
-#                                  scoring='neg_mean_absolute_error')
-# grid_search.fit(X_train, y_train)
-#
-# print(grid_search.best_params_)
-# rf_best = grid_search.best_estimator_
-# rf_predictions = rf_best.predict(X_test)
-# print('=====Random Forest====')
-# print('MSE: {0:.3f}'.format(mean_squared_error(y_test, rf_predictions)))
-# print('MAE: {0:.3f}'.format(mean_absolute_error(y_test, rf_predictions)))
-# print('R^2: {0:.3f}'.format(r2_score(y_test, rf_predictions)))
-#
-# print('====PREDICTIONS=======')
-# print('SGD')
-# print(sgd_predictions)
-# print('RF')
-# print(rf_predictions)
-#
-# print('====PREDICTIONS=======')
+# Random Forest
+param_grid = {
+   "max_depth": [30, 50],
+   "min_samples_split": [3, 5, 10],
+   }
+rf = RandomForestRegressor(n_estimators=1000)
+grid_search = GridSearchCV(rf, param_grid, cv=5,
+                                 scoring='neg_mean_absolute_error')
+grid_search.fit(X_train, y_train)
+
+print(grid_search.best_params_)
+rf_best = grid_search.best_estimator_
+rf_predictions = rf_best.predict(X_test)
+print('=====Random Forest====')
+print('MSE: {0:.3f}'.format(mean_squared_error(y_test, rf_predictions)))
+print('MAE: {0:.3f}'.format(mean_absolute_error(y_test, rf_predictions)))
+print('R^2: {0:.3f}'.format(r2_score(y_test, rf_predictions)))
+
+print('====PREDICTIONS=======')
+print('SGD')
+print(sgd_predictions)
+print('RF')
+print(rf_predictions)
+
+print('====PREDICTIONS=======')
 #
 # # SVR Prediction
 #
